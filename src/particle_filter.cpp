@@ -28,12 +28,11 @@ void ParticleFilter::init(double x, double y, double theta, double std[]) {
    *   (and others in this file).
    */
 
+  //Random engine for generation of particles
+  std::default_random_engine gen;
+
   //Initial set of number of particles
   num_particles = 100;  // TODO: Set the number of particles
-
-  //Resizing weights and particles vectors according to num_particles!
-  weights.resize(num_particles);
-  particles.resize(num_particles);
   
   //Defining standard deviations
   double std_x, std_y, std_theta;
@@ -43,11 +42,8 @@ void ParticleFilter::init(double x, double y, double theta, double std[]) {
 
   //Defining gaussian distributions
   std::normal_distribution<double> dist_x(x, std_x);
-  std::normal_distribution<double> dist_y(x, std_y);
+  std::normal_distribution<double> dist_y(y, std_y);
   std::normal_distribution<double> dist_theta(theta, std_theta);
-
-  //Random engine for generation of particles
-  std::default_random_engine gen;
   
   //Initializing the particles
   particles = vector<Particle>(num_particles);
@@ -199,10 +195,14 @@ void ParticleFilter::resample() {
    */
   /*
   */
+  //Random engine for generation of particles
   std::default_random_engine gen;
-  vector<Particle> new_particles;
 
+  //New particles and weights vectors
+  vector<Particle> new_particles;
   vector<double> weights;
+
+  //Resampling
   for(int i=0; i<num_particles; i++){
     weights.push_back(particles[i].weight);
   }
