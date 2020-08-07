@@ -41,7 +41,7 @@ void ParticleFilter::init(double x, double y, double theta, double std[]) {
   std::normal_distribution<double> dist_x(x, std_x);
   std::normal_distribution<double> dist_y(x, std_y);
   std::normal_distribution<double> dist_theta(theta, std_theta);
-
+  
   //Initializing the particles
   particles = vector<Particle>(num_particles);
   Particle particle;
