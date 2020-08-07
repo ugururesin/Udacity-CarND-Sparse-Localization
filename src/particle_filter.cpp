@@ -110,7 +110,7 @@ void ParticleFilter::dataAssociation(vector<LandmarkObs> predicted,
    */
 
   for(auto& obs: observations){
-    double dist_min = 999999.0;
+    double dist_min = 1000000.0;
 
     for(const auto& pred:predicted){
       double distance = dist(obs.x, obs.y, pred.x, pred.y);
@@ -236,7 +236,11 @@ void ParticleFilter::SetAssociations(Particle& particle,
   particle.associations.clear();
   particle.sense_x.clear();
   particle.sense_y.clear();
+
+  //Assign associations
   particle.associations= associations;
+  
+  //Calling sense
   particle.sense_x = sense_x;
   particle.sense_y = sense_y;
 }
