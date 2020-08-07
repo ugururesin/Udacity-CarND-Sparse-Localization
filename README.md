@@ -109,6 +109,7 @@ The things the grading code is looking for are:
 After full implementation is conducted in `particle_filter.cpp' two different number of particles were tried. Initially 10 particles were set and the pipeline was run. It was successful however then 20 particles were set so as to check whether there will be dramatic reduction in errors.  
 See the results below:  
 
+--- 
 **Number of particles:10**
 | Param | Error  |
 | ----- | ------ |
