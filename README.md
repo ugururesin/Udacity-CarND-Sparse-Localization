@@ -118,7 +118,7 @@ See the results below:
 
 
 ![](img/sim-particles10.gif)  
-  
+---  
 
 
 **Number of particles:20**
