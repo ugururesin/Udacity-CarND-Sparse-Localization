@@ -158,7 +158,9 @@ See the results below:
   
 
 ![](img/sim-particles20.gif)  
+  
 
+**Note that** The simulation images given here are 5 times faster.
 
 ## Conclusion
 The overall pipeline works well. By increasing the number of particles initialized, the errors can be recuded. However, keep in mind that increasing the number of particles will increase the computation time.
