@@ -1,4 +1,7 @@
-//Edited by ugururesin, 2020/08/05
+/* Sparse Localization - CarND Kipnapped Vehicle Project
+Edited by ugururesin, 2020/08/05
+*/
+
 #include "particle_filter.h"
 
 #include <math.h>
@@ -24,7 +27,8 @@ void ParticleFilter::init(double x, double y, double theta, double std[]) {
    * NOTE: Consult particle_filter.h for more information about this method 
    *   (and others in this file).
    */
-  std::default_random_engine gen;
+
+  //Initial set of number of particles
   num_particles = 100;  // TODO: Set the number of particles
 
   //Resizing weights and particles vectors according to num_particles!
@@ -41,6 +45,9 @@ void ParticleFilter::init(double x, double y, double theta, double std[]) {
   std::normal_distribution<double> dist_x(x, std_x);
   std::normal_distribution<double> dist_y(x, std_y);
   std::normal_distribution<double> dist_theta(theta, std_theta);
+
+  //Random engine for generation of particles
+  std::default_random_engine gen;
   
   //Initializing the particles
   particles = vector<Particle>(num_particles);
@@ -74,7 +81,6 @@ void ParticleFilter::prediction(double delta_t, double std_pos[],
 
   //Random engine for generation of particles
   std::default_random_engine gen;
-  
 
   for (int i=0; i<num_particles; ++i){
       if (fabs(yaw_rate)<0.0001){
@@ -109,13 +115,14 @@ void ParticleFilter::dataAssociation(vector<LandmarkObs> predicted,
    *   during the updateWeights phase.
    */
 
+  //Here, Nearest Neighboor is perfomed for data association
   for(auto& obs: observations){
-    double dist_min = 1000000.0;
+    double min_dist = 1000000.0;
 
     for(const auto& pred:predicted){
       double distance = dist(obs.x, obs.y, pred.x, pred.y);
-      if(dist_min > distance){
-        dist_min = distance;
+      if(min_dist > distance){
+        min_dist = distance;
         obs.id = pred.id;
       }
     }
@@ -232,6 +239,7 @@ void ParticleFilter::SetAssociations(Particle& particle,
   // associations: The landmark id that goes along with each listed association
   // sense_x: the associations x mapping already converted to world coordinates
   // sense_y: the associations y mapping already converted to world coordinates
+  
   //Clear the previous associations
   particle.associations.clear();
   particle.sense_x.clear();
@@ -239,8 +247,6 @@ void ParticleFilter::SetAssociations(Particle& particle,
 
   //Assign associations
   particle.associations= associations;
-  
-  //Calling sense
   particle.sense_x = sense_x;
   particle.sense_y = sense_y;
 }
@@ -266,6 +272,6 @@ string ParticleFilter::getSenseCoord(Particle best, string coord) {
   std::stringstream ss;
   copy(v.begin(), v.end(), std::ostream_iterator<float>(ss, " "));
   string s = ss.str();
-  s = s.substr(0, s.length()-1);  // get rid of the trailing space
+  s = s.substr(0, s.length()-1);
   return s;
 }
