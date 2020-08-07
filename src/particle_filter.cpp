@@ -28,11 +28,12 @@ void ParticleFilter::init(double x, double y, double theta, double std[]) {
    *   (and others in this file).
    */
 
-  //Random engine for generation of particles
-  std::default_random_engine gen;
-
   //Initial set of number of particles
-  num_particles = 100;  // TODO: Set the number of particles
+  num_particles = 20;  // TODO: Set the number of particles
+
+  //Resizing weights and particles vectors according to num_particles!
+  weights.resize(num_particles);
+  particles.resize(num_particles);
   
   //Defining standard deviations
   double std_x, std_y, std_theta;
@@ -44,6 +45,9 @@ void ParticleFilter::init(double x, double y, double theta, double std[]) {
   std::normal_distribution<double> dist_x(x, std_x);
   std::normal_distribution<double> dist_y(y, std_y);
   std::normal_distribution<double> dist_theta(theta, std_theta);
+
+  //Random engine for generation of particles
+  std::default_random_engine gen;
   
   //Initializing the particles
   particles = vector<Particle>(num_particles);
@@ -111,7 +115,6 @@ void ParticleFilter::dataAssociation(vector<LandmarkObs> predicted,
    *   during the updateWeights phase.
    */
 
-  //Here, Nearest Neighboor is perfomed for data association
   for(auto& obs: observations){
     double min_dist = 1000000.0;
 
@@ -148,20 +151,22 @@ void ParticleFilter::updateWeights(double sensor_range, double std_landmark[],
     for(auto& p: particles){
       p.weight = 1.0;
 
-      // collect the valid landmarks
+      //Get predicted landmark measurements
       vector<LandmarkObs> predictions;
       for(const auto& lmrk: map_landmarks.landmark_list){
         double distance = dist(p.x, p.y, lmrk.x_f, lmrk.y_f);
-        if( distance < sensor_range){ // if the landmark is within the sensor range, save it to predictions
+        //Check whether the landmark is in the sensor range
+        if(distance < sensor_range){
           predictions.push_back(LandmarkObs{lmrk.id_i, lmrk.x_f, lmrk.y_f});
       }
     }
 
-    // convert observations from vehicle to map coordinates
+    //Converting observations from vehicle coord.s to the map coord.s
     vector<LandmarkObs> observations_map;
     double cos_theta = cos(p.theta);
     double sin_theta = sin(p.theta);
 
+    //Rotation component about z-axis
     for(const auto& obs: observations){
       LandmarkObs tmp;
       tmp.x = obs.x * cos_theta - obs.y * sin_theta + p.x;
@@ -169,15 +174,17 @@ void ParticleFilter::updateWeights(double sensor_range, double std_landmark[],
       observations_map.push_back(tmp);
     }
 
-    //Calling data association
+    //Get landmark indices
     dataAssociation(predictions, observations_map);
 
-    //Computinh the weight of particle:
+    //Calculating particle's final weights
     for(const auto& obs_m: observations_map){
 
       Map::single_landmark_s landmark = map_landmarks.landmark_list.at(obs_m.id-1);
       double x_term = pow(obs_m.x - landmark.x_f, 2) / (2 * pow(std_landmark[0], 2));
       double y_term = pow(obs_m.y - landmark.y_f, 2) / (2 * pow(std_landmark[1], 2));
+      
+      //Multivariate Gaussian Distribution
       double w = exp(-(x_term + y_term)) / (2 * M_PI * std_landmark[0] * std_landmark[1]);
       p.weight *=  w;
     }
@@ -195,14 +202,16 @@ void ParticleFilter::resample() {
    */
   /*
   */
-  //Random engine for generation of particles
-  std::default_random_engine gen;
-
   //New particles and weights vectors
   vector<Particle> new_particles;
   vector<double> weights;
 
-  //Resampling
+  //Random engine for generation of particles
+  std::default_random_engine gen;
+
+  /*The calculated weights of the particles are pushed into the loop below
+  and discrete uniform dist. function is used to update the particles to
+  the Bayesian posterior distribution*/
   for(int i=0; i<num_particles; i++){
     weights.push_back(particles[i].weight);
   }
@@ -275,3 +284,5 @@ string ParticleFilter::getSenseCoord(Particle best, string coord) {
   s = s.substr(0, s.length()-1);
   return s;
 }
+
+//END OF THE particle_filter.cpp
