@@ -2,7 +2,7 @@
 Self-Driving Car Engineer Nanodegree Program
 
 ## Project Introduction
-This project is an implementation of a 2 dimensional particle filter ic C++ for a car that has been kidnapped and transported to a new location! Luckily it has a map of this location, a (noisy) GPS estimate of its initial location, and lots of (noisy) sensor and control data.
+This project is an implementation of a 2 dimensional particle filter in C++ for a car that has been kidnapped and transported to a new location! Luckily it has a map of this location, a (noisy) GPS estimate of its initial location, and lots of (noisy) sensor and control data.
 
 ![](img/res_particles20.png)  
 
@@ -86,7 +86,7 @@ If you are interested, take a look at `src/main.cpp` as well. This file contains
 ## Inputs to the Particle Filter
 The data `map_data.txt` is given in the `data` directory.
 
-#### The Map*
+#### The Map
 `map_data.txt` includes the position of landmarks (in meters) on an arbitrary Cartesian coordinate system. Each row has three columns
 1. x position
 2. y position
@@ -109,7 +109,7 @@ The things the grading code is looking for are:
 After full implementation is conducted in `particle_filter.cpp' two different number of particles were tried. Initially 10 particles were set and the pipeline was run. It was successful however then 20 particles were set so as to check whether there will be dramatic reduction in errors.  
 See the results below:  
 
-** Number of particles:10 **
+**Number of particles:10**
 | Param | Error  |
 | ----- | ------ |
 |  x    | 0.178  |
@@ -121,7 +121,7 @@ See the results below:
   
 
 
-** Number of particles:20 **
+**Number of particles:20**
 | Param | Error  |
 | ----- | ------ |
 |  x    | 0.135  |
@@ -132,7 +132,7 @@ See the results below:
 ![](img/sim-particles20.gif)  
   
 
-**Note that** The simulation images given here are 5 times faster.
+**Note that** the simulation images given here are **5 times faster!**
 
 ## Conclusion
 The overall pipeline works well. By increasing the number of particles initialized, the errors can be recuded. However, keep in mind that increasing the number of particles will increase the computation time.
